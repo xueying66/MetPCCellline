@@ -1,3 +1,6 @@
+library(DESeq2)
+library(GSVA)
+
 ################### Yes, pc1.tail.gene are cMET co-expressed genes! ######################
 cor.rs    <- cor(CCLE.log2.tpm.matrix[MET,] %>% c,CCLE.log2.tpm.matrix[pc1.tail.gene,] %>% t , method = 'spearman')
 cor.rd.rs <- cor(CCLE.log2.tpm.matrix[MET,] %>% c,CCLE.log2.tpm.matrix[sample(size = 200, x = 1:nrow(CCLE.log2.tpm.matrix)),] %>% t , method = 'spearman')
@@ -11,8 +14,7 @@ cor.test(x = CCLE.log2.tpm.matrix[MET,], y = with.PC3.corr %>% c,method = "spear
 cor(x = CCLE.log2.tpm.matrix[MET,], y = with.PC3.corr %>% c)
 
 
-library(DESeq2)
-library(GSVA)
+
 
 ################### Yes, pc1.tail.gene are cMET co-expressed genes! ######################
 cor.rs    <- cor(CCLE.log2.tpm.matrix[MET,] %>% c,CCLE.log2.tpm.matrix[pc1.tail.gene,] %>% t , method = 'spearman')
@@ -48,14 +50,10 @@ dds                                            <- DESeqDataSetFromMatrix(countDa
 dds$condition                                  <- relevel(dds$condition, ref = "wild_type")
 dds                                            <- DESeq(dds)
 res                                            <- results(dds)
-
-
 res.df                                         <- as.data.frame(res)
 res.df                                         <- res.df[complete.cases(res.df),]
 up.gene                                     <- filter(res.df, log2FoldChange > 1 & padj<0.05)
 dn.gene                                     <- filter(res.df, log2FoldChange < -1 & padj<0.05)
-
-
 
 load("/home/liuxueying/met_pc_cell_line/pcdata/vcap_cMET_high_bulk_data/gene.expression.RData")
 colnames(log2.tpm.matrix) <- c(rep('wild_type',4), rep('cMET_high',4))
@@ -102,7 +100,7 @@ cMET_high_expr <- cMET_high_expr[,-6]
 cMET_high_expr <- cMET_high_expr[, 5:6]
 colnames(cMET_high_expr) <- c('MET_OE1', 'MET_OE2')
 
-vcap.oe <- cMET_high_expr
+vcap.oe    <- cMET_high_expr
 vcap.oe.id <- colnames(vcap.oe)
 
 
