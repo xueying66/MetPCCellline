@@ -76,35 +76,24 @@ p3 <- FeaturePlot(CRPC.tumor.seob, features = c('CD44'))
 
 
 
-# NEPC --------------------------------------------------------------------
-
-stem.cell.pesudobulk <- AggregateExpression(
-  CRPC.tumor.seob,
-  assays = NULL,
-  features = NULL,
-  return.seurat = FALSE,
-  group.by = "tumor_subtype",
-  add.ident = NULL,
-  slot = "counts",
-  verbose = TRUE
-)
-
-stem.cell.pesudobulk                     <- stem.cell.pesudobulk$RNA
-stem.cell.pesudobulk.cpm                 <- apply(stem.cell.pesudobulk, 2, function(x) { x/sum(x)*1000000 })
-stem.cell.pesudobulk.log2cpm             <- log2(stem.cell.pesudobulk.cpm +1)
-
-stem.cell.pesudobulk.log2cpm             <- change_rownames_symbol_to_ensemble(stem.cell.pesudobulk.log2cpm)
+#  MSPC  TC analysis--------------------------------------------------------------
 
 
+####Fig 4 MSPC 
+
+load(file = './pcdata/paper/data/section3/CRPC.confident.seob.RData')
+CRPC.tumor.seob <- subset(CRPC.confident.seob, tumor_subtype != 'normal')
 
 
-marker.gene           <- intersect(rownames(stem.cell.pesudobulk.log2cpm),CCLE.rna.seq.marker.gene.1000)  
-marker.gene           <- intersect(rownames(CCLE.log2.tpm.matrix),marker.gene) 
-ccle.stem.cor         <- cor(stem.cell.pesudobulk.log2cpm[marker.gene,],CCLE.log2.tpm.matrix[marker.gene,],method='spearman')
-ccle.stem.cor         <- ccle.stem.cor %>% t %>% as.data.frame()
-ccle.stem.cor[pc.cell.line.name,]###MDA-PCA-2b PC3
+MSPC_seob <- subset(CRPC.tumor.seob, tumor_subtype == 'MSPC')
 
-df           <- ccle.stem.cor[, 'NEPC', drop = FALSE]
+
+MSPC.cor.res <- TC.rs.list(MSPC_seob)
+
+df <- MSPC.cor.res$median.cor
+colnames(df)[1] <- 'correlation'
+
+
 df$name      <- rownames(df)
 df$prostate  <- ifelse(rownames(df) %in% pc.cell.line.name, 
                        "prostate", 
@@ -114,50 +103,66 @@ colnames(df)[1] <- "correlation"
 df$rank     <- rank(df$correlation)
 df_ranked   <- df[order(df$rank), ]
 
-
-
+#write.xlsx(df_ranked, file = 'mspc.tc.xlsx')
+#--- B. plot ---
+highlight_points <- df_ranked[df_ranked$rank %in% c(1018, 1019,1017), ]
 ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
   geom_point(size = 3) +  
   labs(
+    # 标题使用该列名，或你想替换的名字
     x = "Rank",
     y = "Transcriptome similarity"
   ) +
   scale_color_manual(values = c("prostate" = "red", "others" = "black")) +
+  # 在图中高亮 pc.cell.line.name 这几行
   geom_point(
     data = subset(df, name %in% pc.cell.line.name),
     color = "red",
     size = 4
-  )
+  )+
+  geom_text_repel(data = subset(df, name %in% pc.cell.line.name), 
+                  aes(label = gsub(x= name, pattern = '_PROSTATE','')), 
+                  nudge_y = 0.02,  # 标签在纵坐标上的偏移量
+                  color = "black",
+                  size = 4,
+                  arrow = arrow(length = unit(0.02, "npc")))+
+  
+ 
+  theme_bw()+
+  theme(
+    legend.position = 'none',
+    plot.title = element_text(hjust = 0.5, size = 25),
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
+    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
+    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    
+  )+ggtitle('MSPC')
 
-# ARPC --------------------------------------------------------------------
-
-stem.cell.pesudobulk <- AggregateExpression(
-  CRPC.confident.seob,
-  assays = NULL,
-  features = NULL,
-  return.seurat = FALSE,
-  group.by = "tumor_subtype",
-  add.ident = NULL,
-  slot = "counts",
-  verbose = TRUE
-)
-
-stem.cell.pesudobulk                     <- stem.cell.pesudobulk$RNA
-stem.cell.pesudobulk.cpm                 <- apply(stem.cell.pesudobulk, 2, function(x) { x/sum(x)*1000000 })
-stem.cell.pesudobulk.log2cpm             <- log2(stem.cell.pesudobulk.cpm +1)
-
-stem.cell.pesudobulk.log2cpm             <- change_rownames_symbol_to_ensemble(stem.cell.pesudobulk.log2cpm)
+ggsave('./pcdata/paper/plot/section4/MSPC.pdf', width = 8, height = 8)
 
 
 
 
-marker.gene           <- intersect(rownames(stem.cell.pesudobulk.log2cpm),CCLE.rna.seq.marker.gene.1000)  
-marker.gene           <- intersect(rownames(CCLE.log2.tpm.matrix),marker.gene) 
-ccle.stem.cor         <- cor(stem.cell.pesudobulk.log2cpm[marker.gene,],CCLE.log2.tpm.matrix[marker.gene,],method='spearman')
-ccle.stem.cor         <- ccle.stem.cor %>% t %>% as.data.frame()
-ccle.stem.cor[pc.cell.line.name,]
 
-df           <- ccle.stem.cor[, 'ARPC', drop = FALSE]
+# Fig4 ARPC TC analysis ---------------------------------------------------------------
+
+
+####Fig 4 ARPC  
+
+load(file = './pcdata/paper/data/section3/CRPC.confident.seob.RData')
+CRPC.tumor.seob <- subset(CRPC.confident.seob, tumor_subtype != 'normal')
+
+
+ARPC_seob <- subset(CRPC.tumor.seob, tumor_subtype == 'ARPC')
+
+
+ARPC.cor.res <- TC.rs.list(ARPC_seob)
+
+df <- ARPC.cor.res$median.cor
+colnames(df)[1] <- 'correlation'
+
+
 df$name      <- rownames(df)
 df$prostate  <- ifelse(rownames(df) %in% pc.cell.line.name, 
                        "prostate", 
@@ -167,50 +172,61 @@ colnames(df)[1] <- "correlation"
 df$rank     <- rank(df$correlation)
 df_ranked   <- df[order(df$rank), ]
 
+#--- B. plot ---
 
 ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
   geom_point(size = 3) +  
   labs(
+    # 标题使用该列名，或你想替换的名字
     x = "Rank",
     y = "Transcriptome similarity"
   ) +
   scale_color_manual(values = c("prostate" = "red", "others" = "black")) +
-
+  # 在图中高亮 pc.cell.line.name 这几行
   geom_point(
     data = subset(df, name %in% pc.cell.line.name),
     color = "red",
     size = 4
-  )
+  )+
+  geom_text_repel(data = subset(df, name %in% pc.cell.line.name), 
+                  aes(label = gsub(x= name, pattern = '_PROSTATE','')), 
+                  nudge_y = 0.02,  # 标签在纵坐标上的偏移量
+                  color = "black",
+                  size = 4,
+                  arrow = arrow(length = unit(0.02, "npc")))+
+  
+  theme_bw()+
+  theme(
+    legend.position = 'none',
+    plot.title = element_text(hjust = 0.5, size = 25),
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
+    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
+    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    
+  )+ggtitle('ARPC')
 
-# MSPC   -----------------------------------
-
-
-stem.cell.pesudobulk <- AggregateExpression(
-  CRPC.tumor.seob,
-  assays = NULL,
-  features = NULL,
-  return.seurat = FALSE,
-  group.by = "tumor_subtype",
-  add.ident = NULL,
-  slot = "counts",
-  verbose = TRUE
-)
-
-stem.cell.pesudobulk                     <- stem.cell.pesudobulk$RNA
-stem.cell.pesudobulk.cpm                 <- apply(stem.cell.pesudobulk, 2, function(x) { x/sum(x)*1000000 })
-stem.cell.pesudobulk.log2cpm             <- log2(stem.cell.pesudobulk.cpm +1)
-
-stem.cell.pesudobulk.log2cpm             <- change_rownames_symbol_to_ensemble(stem.cell.pesudobulk.log2cpm)
-
+ggsave('./pcdata/paper/plot/section4/ARPC.pdf', width = 8, height = 8)
 
 
+# Fig NEPC TC analysis----------------------------------------------------------------
 
-marker.gene           <- intersect(rownames(stem.cell.pesudobulk.log2cpm),CCLE.rna.seq.marker.gene.1000)  
-marker.gene           <- intersect(rownames(CCLE.log2.tpm.matrix),marker.gene) 
-ccle.stem.cor         <- cor(stem.cell.pesudobulk.log2cpm[marker.gene,],CCLE.log2.tpm.matrix[marker.gene,],method='spearman')
-ccle.stem.cor         <- ccle.stem.cor %>% t %>% as.data.frame###MDA-PCA-2b PC3
 
-df           <- ccle.stem.cor[, 'MSPC', drop = FALSE]
+####Fig 4 NEPC  
+
+load(file = './pcdata/paper/data/section3/CRPC.confident.seob.RData')
+CRPC.tumor.seob <- subset(CRPC.confident.seob, tumor_subtype != 'normal')
+
+
+NEPC_seob <- subset(CRPC.tumor.seob, tumor_subtype == 'NEPC')
+
+
+NEPC.cor.res <- TC.rs.list(NEPC_seob)
+
+df <- NEPC.cor.res$median.cor
+colnames(df)[1] <- 'correlation'
+
+
 df$name      <- rownames(df)
 df$prostate  <- ifelse(rownames(df) %in% pc.cell.line.name, 
                        "prostate", 
@@ -220,18 +236,44 @@ colnames(df)[1] <- "correlation"
 df$rank     <- rank(df$correlation)
 df_ranked   <- df[order(df$rank), ]
 
+#--- B. plot ---
+
 ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
   geom_point(size = 3) +  
   labs(
+    # 标题使用该列名，或你想替换的名字
     x = "Rank",
     y = "Transcriptome similarity"
   ) +
   scale_color_manual(values = c("prostate" = "red", "others" = "black")) +
+  # 在图中高亮 pc.cell.line.name 这几行
   geom_point(
     data = subset(df, name %in% pc.cell.line.name),
     color = "red",
     size = 4
-  )
+  )+
+  geom_text_repel(data = subset(df, name %in% pc.cell.line.name), 
+                  aes(label = gsub(x= name, pattern = '_PROSTATE','')), 
+                  nudge_y = 0.02,  # 标签在纵坐标上的偏移量
+                  color = "black",
+                  size = 4,
+                  arrow = arrow(length = unit(0.02, "npc")))+
+  
+  
+  
+  theme_bw()+
+  theme(
+    legend.position = 'none',
+    plot.title = element_text(hjust = 0.5, size = 25),
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
+    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
+    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    
+  )+ggtitle('NEPC')
+
+ggsave('./pcdata/paper/plot/section4/NEPC.pdf', width = 8, height = 8)
+
 
 
 # ARPC-vcap ---------------------------------------------------------------
