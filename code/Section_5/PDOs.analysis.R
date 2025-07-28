@@ -70,7 +70,7 @@ gseascore                                     <- gsva(vcap_bulk,
 
 
 # engineered correlation with MSPC ------------------------------------------------------
-##lncap knockout
+##LNCAP knockout
 load(file = './pcdata/GSE175975_LNCAP_scrna/lncap.six.sample.ave.cpm.RData')
 lncap.six.sample.ave.cpm 
 
@@ -80,7 +80,7 @@ lncap.ko.id <- colnames(lncap.ko)
 
 
 
-###enza 
+### LNCAP enza 
 load("~/met_pc_cell_line/pcdata/GSE162225/RData/gene.expression.RData")
 head(log2.tpm.matrix)
 lncap.enza <- log2.tpm.matrix
@@ -92,7 +92,7 @@ colnames(lncap.enza) <- c('LNCaP.enza.1','LNCaP.enza.2','LNCaP.enza.3')
 lncap.enza.id <- colnames(lncap.enza)
 
 
-####MET OE 
+####VCAP MET OE 
 load("~/met_pc_cell_line/pcdata/vcap_cMET_high_bulk_data/gene.expression.RData")
 cMET_high_expr <- log2.tpm.matrix
 cMET_high_expr <- cMET_high_expr[,-6]
@@ -119,96 +119,7 @@ all.sample.tpm <- cbind(all.sample.tpm, ccle.tpm)
 
 
 
-# MSPC correlation with ccle
 
-load(file = './pcdata/paper/data/section3/CRPC.confident.seob.RData')
-CRPC.tumor.seob <- subset(CRPC.confident.seob, tumor_subtype !='normal')
-
-stem.cell.pesudobulk <- AggregateExpression(
-  CRPC.tumor.seob,
-  assays = NULL,
-  features = NULL,
-  return.seurat = FALSE,
-  group.by = "tumor_subtype",
-  add.ident = NULL,
-  slot = "counts",
-  verbose = TRUE
-)
-
-stem.cell.pesudobulk                     <- stem.cell.pesudobulk$RNA
-stem.cell.pesudobulk.cpm                 <- apply(stem.cell.pesudobulk, 2, function(x) { x/sum(x)*1000000 })
-stem.cell.pesudobulk.log2cpm             <- log2(stem.cell.pesudobulk.cpm +1)
-
-stem.cell.pesudobulk.log2cpm             <- change_rownames_symbol_to_ensemble(stem.cell.pesudobulk.log2cpm)
-
-
-
-
-marker.gene           <- intersect(rownames(stem.cell.pesudobulk.log2cpm),CCLE.rna.seq.marker.gene.1000)  
-marker.gene           <- intersect(rownames(all.sample.tpm),marker.gene) 
-ccle.stem.cor         <- cor(stem.cell.pesudobulk.log2cpm[marker.gene,],all.sample.tpm[marker.gene,],method='spearman')
-ccle.stem.cor         <- ccle.stem.cor %>% t %>% as.data.frame()
-
-ccle.stem.cor[pc.cell.line.name,]
-ccle.stem.cor[lncap.ko.id,]
-df           <- ccle.stem.cor[, 'MSPC', drop = FALSE]
-df$name      <- rownames(df)
-
-df$prostate  <- ifelse(rownames(df) %in% pc.cell.line.name, 
-                       "prostate", 
-                       ifelse(rownames(df) %in% lncap.ko.id, 'lncap.ko', ifelse(rownames(df) %in% lncap.en.id,'lncap.en',
-                                                                                ifelse(rownames(df) %in% vcap.oe.id,'vcap.oe','others' ))))
-
-colnames(df)[1] <- "correlation"
-
-
-df_ranked <- df %>% arrange(correlation)
-df_ranked$rank <- 1:nrow(df_ranked)
-
-ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
-  geom_point(size = 2.5) +
-  
-  # 高亮 prostate
-  geom_point(
-    data = subset(df_ranked, name %in% pc.cell.line.name),
-    color = "firebrick",
-    size = 4
-  ) +
-  
-  geom_point(
-    data = subset(df_ranked, name %in% lncap.ko.id),
-    color = "#0E986F",
-    size = 4
-  )+
-  geom_point(
-    data = subset(df_ranked, name %in% lncap.en.id),
-    color = "#D65813",
-    size = 4
-  )+
-  geom_point(
-    data = subset(df_ranked, name %in% vcap.oe.id),
-    color = "#796CAD",
-    size = 4
-  )+
-  geom_text_repel(
-    data = subset(df_ranked, name %in% pc.cell.line.name),
-    aes(label = gsub(x = name, pattern = '_PROSTATE','')),
-    nudge_y = 0.03,
-    box.padding = 0.3,
-    point.padding = 0.2,
-    segment.size = 0.3,
-    size = 4,
-    color = "black"
-  )+
-  
-  scale_color_manual(values = c("prostate" = "firebrick", "others" = "grey", "lncap.ko" = "#0E986F", 'lncap.en'='#D65813', 'vcap.oe'='#796CAD')) +
-  
-  labs(
-    x = "Rank",
-    y = "Transcriptome similarity",
-    title = ""
-  )+theme_bw()
-  )
 
 
 
