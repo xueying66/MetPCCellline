@@ -1,3 +1,7 @@
+load('/home/liuxueying/met_pc_cell_line/processed.data/organize.mutation.data.RData')
+
+
+
 ########## Compute mutation burden ########################
 tmp                         <- ddply(PC.maf.data.list$CCLE,.(dcast.id), function(x) sum(x$Variant_Type == 'SNP' & x$Variant_Classification != 'silent'))
 CCLE.mutation.burden        <- tmp$V1
