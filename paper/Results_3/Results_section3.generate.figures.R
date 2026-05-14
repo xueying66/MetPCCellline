@@ -63,13 +63,13 @@ df$rank               <- rank(df$correlation)
 df_ranked             <- df[order(df$rank),]
 
 p1 <- ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
-  geom_point(size = 3) +  # 绘制点，设置大小
+  geom_point(size = 3) +  
   labs(title = "", x = "Rank", y = "Transcriptome similarity") +
   scale_color_manual(values = c("prostate" = "red", "others" = "black")) +  
   geom_point(data = subset(df, name == "PC3_PROSTATE"), color = "red", size = 4) +
   geom_text_repel(data = subset(df, name == "PC3_PROSTATE"| name == 'LNCAPCLONEFGC_PROSTATE' | name == 'VCAP_PROSTATE' | name == 'MDAPCA2B_PROSTATE'), 
                   aes(label = gsub(x= name, pattern = '_PROSTATE','')), 
-                  nudge_y = 0.02,  # 标签在纵坐标上的偏移量
+                  nudge_y = 0.02,  
                   color = "black",
                   size = 4,
                   arrow = arrow(length = unit(0.02, "npc")))+
@@ -185,23 +185,23 @@ df_ranked             <- df[order(df$rank),]
 
 df_highlight <- subset(df, name %in% c("PC3_PROSTATE", "LNCAPCLONEFGC_PROSTATE", "VCAP_PROSTATE", "MDAPCA2B_PROSTATE"))
 ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
-  geom_point(size = 2) +  # 绘制所有点
+  geom_point(size = 2) +  
   labs(title = "Adenocarcinoma scRNA-seq", x = "Rank", y = "Transcriptome similarity") +
   scale_color_manual(values = c("prostate" = "red", "others" = "black")) +  
   geom_point(data = subset(df, prostate == "prostate"), color = "red", size = 3)+
   ggplot.style +
   theme(legend.position = 'none')+
   
-  # 添加箭头，从标签尾部指向数据点
+ 
   geom_segment(data = df_highlight, 
-               aes(x = rank - 50, xend = rank, y = correlation, yend = correlation),  # x 起点是标签，xend 是数据点
-               arrow = arrow(length = unit(0.01, "npc")),  # 添加箭头
+               aes(x = rank - 50, xend = rank, y = correlation, yend = correlation), 
+               arrow = arrow(length = unit(0.01, "npc")), 
                color = "black") +
   
-  # 添加标签
+ 
   geom_text(data = df_highlight, 
-            aes(x = rank - 50, y = correlation, label = gsub("_PROSTATE", "", name)),  # 标签位于箭头起点
-            hjust = 1,  # 右对齐标签
+            aes(x = rank - 50, y = correlation, label = gsub("_PROSTATE", "", name)),  
+            hjust = 1,  
             color = "black", 
             size = 4)
 
@@ -245,20 +245,20 @@ ggplot(df, aes(x= ln.cor.median, y=bone.cor.median))+
   xlim(c(0,0.3))+ylim(c(0,0.3))+geom_abline(slope = 1,intercept = 0)+
   annotate(
     'text',
-    x = 0.2,            # x 轴位置（在两个柱中间）
-    y = 0.15,           # y 轴位置（高于图顶端）
-    label = paste0("Spearman-rank correlation = ", round(bone.ln.cor, digits = 2)), # p 值标签
-    size = 5,           # 字体大小
-    color = "black",      # 字体颜色
-    hjust = 0           # 水平对齐方式
+    x = 0.2,           
+    y = 0.15,          
+    label = paste0("Spearman-rank correlation = ", round(bone.ln.cor, digits = 2)), 
+    size = 5,           
+    color = "black",     
+    hjust = 0          
   )+theme_bw()+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 25, color = 'black'),     
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.4, "cm"),         
     
   )
 
