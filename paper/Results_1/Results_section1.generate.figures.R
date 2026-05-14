@@ -2,7 +2,7 @@ setwd('/home/liuxueying/met_pc_cell_line/')
 # Fig.1a ---------------------------------------------------------------------
 load(file = './data/CCLE.SU2C.TCGA.mutation.matrix.RData')
 load(file = './data/compare.somatic.mutation.RData')
-full.gene               <- c(MET.highly.mutated.gene,MET.dm.gene) %>% unique  ####筛选出来转移癌和原发癌差异突变的基因 以及转移癌里面高突变的基因
+full.gene               <- c(MET.highly.mutated.gene,MET.dm.gene) %>% unique  
 
 CCLE.mutation.fequency  <- apply(CCLE.mutation.matrix[full.gene,], 1, sum) / ncol(CCLE.mutation.matrix)
 
@@ -45,23 +45,23 @@ alter_fun <- list(
   }
 )
 
-# 定义颜色
+
 col <- c("MUT" = "black", "background" = '#F0F0F0')
 sample_order <- rownames(col.df.pro)
 identical(colnames(mutation.profile), rownames(col.df.pro))
-# 绘制 OncoPrint
+
 p1 <- oncoPrint(
   mutation.profile,
   get_type = function(x) {ifelse(x == 1, "MUT", "background")},
-  row_names_side = "left",          # 行名放置在左侧
-  show_heatmap_legend = FALSE,      # 隐藏图例
-  alter_fun = alter_fun,            # 突变样式函数
-  col = col,                        # 颜色定义
-  show_column_names = FALSE,        # 不显示列名
+  row_names_side = "left",          
+  show_heatmap_legend = FALSE,      
+  alter_fun = alter_fun,           
+  col = col,                       
+  show_column_names = FALSE,        
   show_row_names = F, # 不显示行名
-  top_annotation = col.annotation,  # 顶部注释
-  right_annotation = NULL,          # 确保右侧无条形图
-  show_pct = FALSE,                 # 禁用百分比显示
+  top_annotation = col.annotation,  
+  right_annotation = NULL,         
+  show_pct = FALSE,                
   row_names_gp = gpar(fontsize = 40, fontface = 'bold'),
   column_order = sample_order,
   row_order = gene.order)
@@ -92,7 +92,7 @@ col.annotation    <-  HeatmapAnnotation(type=col.df.pro$type,
 )
 
 
-# 定义 alter_fun
+
 alter_fun <- list(
   background = function(x, y, w, h) {
     grid.rect(x, y, w - unit(0.5, "mm"), h, gp = gpar(fill = '#F0F0F0', col = NA))
@@ -109,7 +109,7 @@ alter_fun <- list(
 
 '#F5F5F5'
 
-# 定义颜色
+
 col            <- c("MUT" = "black", "background" = '#F0F0F0')
 sample_order   <- rownames(col.df.pro)
 identical(colnames(mutation.profile), rownames(col.df.pro))
@@ -117,14 +117,14 @@ identical(colnames(mutation.profile), rownames(col.df.pro))
 p2 <- oncoPrint(
   mutation.profile,
   get_type = function(x) {ifelse(x == 1, "MUT", "background")},
-  #row_names_side = "right",          # 行名放置在左侧
-  show_heatmap_legend = FALSE,      # 隐藏图例
-  alter_fun = alter_fun,            # 突变样式函数
-  col = col,                        # 颜色定义
-  # show_column_names = T,        # 显示列名
-  top_annotation = col.annotation,  # 顶部注释
-  right_annotation = NULL,          # 确保右侧无条形图
-  show_pct = FALSE,                 # 禁用百分比显示
+  #row_names_side = "right",          
+  show_heatmap_legend = FALSE,     
+  alter_fun = alter_fun,           
+  col = col,                        
+  # show_column_names = T,        
+  top_annotation = col.annotation,  
+  right_annotation = NULL,         
+  show_pct = FALSE,                 
   row_names_gp = gpar(fontsize = 40, fontface = 'bold'),
   show_row_names = F,
   
@@ -187,19 +187,19 @@ p4 <- Heatmap(mutation.frequency,
               col=colorRamp2(c(0,1),c('blue','red')),
               row_names_gp = gpar(fontsize = 40,fontface='bold'),
               width = unit(1, "cm"),
-              show_heatmap_legend = T,##显示图例
+              show_heatmap_legend = T,
               top_annotation=col.ha,
               show_column_names = F,
               cluster_columns = F,
               cluster_rows = F,
-              column_order = c("CCLE.mutation.fequency"), # 强制指定列顺序
+              column_order = c("CCLE.mutation.fequency"),
               row_order = gene.order,
               name = 'Mutation \nfrequency',
               heatmap_legend_param = list(
-                title_gp = gpar(fontsize = 20, fontface = "bold"), # 图例标题字体
-                labels_gp = gpar(fontsize = 20),                  # 图例标签字体
-                legend_height = unit(10, "cm"),                    # 图例高度
-                legend_width = unit(5, "cm")                      # 图例宽度
+                title_gp = gpar(fontsize = 20, fontface = "bold"),
+                labels_gp = gpar(fontsize = 20),                  
+                legend_height = unit(10, "cm"),                    
+                legend_width = unit(5, "cm")                      
               ))
 
 
@@ -211,16 +211,16 @@ grob_p4 <- grid.grabExpr({
 
 pdf("./plot/Fig.1a.pdf", width = 90, height = 40)
 
-# 创建 layout，左宽右窄，例如 p3 占 4 单位，p4 占 1 单位
+
 grid.newpage()
 pushViewport(viewport(layout = grid.layout(nrow = 1, ncol = 2, widths = unit(c(4, 0.2), "null"))))
 
-# p3 左图（oncoPrint 拼图）
+
 pushViewport(viewport(layout.pos.col = 1))
 grid.draw(p3)
 upViewport()
 
-# p4 右图（mutation frequency 条带热图）
+
 pushViewport(viewport(layout.pos.col = 2))
 grid.draw(grob_p4)
 upViewport(2)
@@ -246,10 +246,10 @@ df$name <- gsub(df$name, pattern = 'VCAP', replacement = 'VCaP')
 
 #write.csv(df, file = "/home/liuxueying/met_pc_cell_line/pcdata/paper/data/reproduce/section1/Fig.1b.csv", row.names = TRUE)
 
-# 保证 sample 的顺序按照 rank 排好（如果你希望固定排序）
+
 df$name <- factor(df$name, levels = df$name[order(df$rank)])
 
-# 绘图
+
 ggplot(df, aes(x = name, y = mutation_burden)) +
   geom_col(width = 0.6, fill = "#D8CDEB") +
   labs(y = "Number of mutated genes") +
@@ -319,7 +319,7 @@ aa$name <- gsub(aa$name, pattern = 'LNCAPCLONEFGC', replacement = 'LNCaP')
 aa$name <- gsub(aa$name, pattern = 'MDAPCA2B', replacement = 'MDA-PCa-2b')
 aa$name <- gsub(aa$name, pattern = 'NCIH660', replacement = 'NCI-H660')
 aa$name <- gsub(aa$name, pattern = 'VCAP', replacement = 'VCaP')
-# 保证 sample 的顺序按照 rank 排好（如果你希望固定排序）
+
 aa$name <- factor(aa$name, levels = aa$name[order(aa$rank)])
 
 
@@ -395,26 +395,25 @@ View(df) #"1@6257785@RPL22" resembled by three hyper-mutated cell lines; this mu
 df <- df[,c(38,39)]
 colnames(df)[1] <- 'CELL_LINE_NAME'
 cell_lines <- PC.maf.data.list$CCLE$CCLE_Name %>% table() %>% names()
-# 假设 df 有 mutation.code 和 CELL_LINE_NAME 两列
-# 我们先把CELL_LINE_NAME转成factor，并指定levels为所有13个细胞系
+
 df$CELL_LINE_NAME <- factor(df$CELL_LINE_NAME, levels = cell_lines)
-# 然后直接 table()
+
 hot.mutation.code.ccle <- table(df$mutation.code, df$CELL_LINE_NAME)
-# 将出现次数>0的变为1，否则0
+
 hot.mutation.code.ccle <- ifelse(hot.mutation.code.ccle > 0, 1, 0)
-# 现在 hot.mutation.code.ccle 就包含了 cell_lines 的所有列，如果 df 中有的细胞系就可能出现1，否则就是全0
+
 hot.mutation.code.ccle
-# 假设你的原始矩阵叫 hot.mutation.code.ccle
+
 original_rownames <- rownames(hot.mutation.code.ccle)
-# 利用strsplit切割原有的行名
+
 split_names <- strsplit(original_rownames, "@")
-# 重构新行名
+
 new_rownames <- sapply(split_names, function(x){
   paste0(x[3], " (chr", x[1], ":", x[2], ")")
 })
-# 更新行名
+
 rownames(hot.mutation.code.ccle) <- new_rownames
-# 查看新矩阵
+
 hot.mutation.code.ccle
 colnames(hot.mutation.code.ccle) <- gsub(colnames(hot.mutation.code.ccle), pattern = '_PROSTATE',replacement = '')
 colnames(hot.mutation.code.ccle)[5] <- 'MDA-PCa-2b'
@@ -428,18 +427,18 @@ all_samples  <- colnames(hot.mutation.code.ccle)
 p1 <- oncoPrint(
   hot.mutation.code.ccle,
   get_type = function(x) {ifelse(x == 1, "MUT", "background")},
-  row_names_side = "left",          # 行名放置在左侧
-  show_heatmap_legend = F,      # 隐藏图例
-  alter_fun = alter_fun,            # 突变样式函数
-  col = col,                        # 颜色定义
-  show_column_names = T,        # 显示列名
-  top_annotation = NULL,        # 确保顶部无条形图
-  right_annotation = NULL,          # 确保右侧无条形图
-  show_pct = FALSE,                 # 禁用百分比显示
-  row_names_gp = gpar(fontsize = 20),    #行名字体
-  column_names_gp = gpar(fontsize = 25), # 列名字体
-  column_order = sample.order, #行名顺序
-  column_names_rot = 45)        # 列名旋转45
+  row_names_side = "left",         
+  show_heatmap_legend = F,     
+  alter_fun = alter_fun,           
+  col = col,                        
+  show_column_names = T,        
+  top_annotation = NULL,        
+  right_annotation = NULL,          
+  show_pct = FALSE,                 
+  row_names_gp = gpar(fontsize = 20),    
+  column_names_gp = gpar(fontsize = 25), 
+  column_order = sample.order, 
+  column_names_rot = 45)        
 pdf('./plot/hot.mutation.code.ccle.pdf', width = 12, height = 9)
 p1
 dev.off()
@@ -456,7 +455,7 @@ rs.df  <- foreach(g = c.gene,.combine = 'rbind') %do% {
   p.value <- wilcox.test(TCGA.gene.cnv.matrix[g,],SU2C.gene.cnv.matrix[g,])$p.value
   delta   <- SU2C.gene.cnv.matrix[g, ] %>% median - TCGA.gene.cnv.matrix[g,] %>% median
   data.frame(delta = delta, p.value = p.value,gene = g)
-}  ####计算TCGA SU2C 差异cnv 基因 (使用wilcox 方法)
+}  
 rownames(rs.df)       <- rs.df$gene
 rs.df$p.adj           <- p.adjust(rs.df$p.value,method = 'bonferroni')
 
@@ -491,11 +490,11 @@ ggplot(rs.df, aes(x = delta, y = -log10(p.adj),color=sig))+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 15),
-    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 15, color = 'black'),      # 坐标轴刻度加粗
+    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 15, color = 'black'),      
     axis.text.x = element_text( hjust = 1, vjust = 1),
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.2, "cm"),         # 增加刻度线长度
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.2, "cm"),        
     
   )
 
