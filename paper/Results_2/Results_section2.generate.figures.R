@@ -21,9 +21,9 @@ mutation.burden.df$rank <- rank(mutation.burden.df$mutation.burden)
 
 mutation.burden.df$type2 <- ifelse(mutation.burden.df$mutation.burden > 9 ,paste0(mutation.burden.df$type,'hyper'), 'other')
 type_colors <- c(
-  "CCLEhyper" = "#377EB9",     # 蓝色
-  "SU2Chyper" = "#4DAE48",   # 绿色
-  "TCGAhyper" = "#974F9F",     # 紫色
+  "CCLEhyper" = "#377EB9",    
+  "SU2Chyper" = "#4DAE48",   
+  "TCGAhyper" = "#974F9F",    
   'other'='black'
 )
 
@@ -40,10 +40,10 @@ ggplot(mutation.burden.df, aes(x = rank, y = mutation.burden, color = type2))+
   theme(
     
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 25, color = 'black'),      
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.4, "cm"),         
     
   )
 ggsave('./plot/three.dataset.mutation.burden.pdf', width = 12,height = 10)
@@ -53,14 +53,14 @@ ggsave('./plot/three.dataset.mutation.burden.pdf', width = 12,height = 10)
 load(file = './data/CCLE.SU2C.TCGA.mutation.matrix.RData')
 
 MMR.mutation.matrix <- cbind(TCGA.mutation.matrix[MMR.gene,],SU2C.mutation.matrix[MMR.gene,],CCLE.mutation.matrix[MMR.gene,])
-MMR.mut.sample      <- colnames(MMR.mutation.matrix)[apply(MMR.mutation.matrix,2,sum) >0 ]  ####MMR 修复基因突变的样本
+MMR.mut.sample      <- colnames(MMR.mutation.matrix)[apply(MMR.mutation.matrix,2,sum) >0 ]  
 MMR.gene            <- c('MLH1','MLH3','MSH2','MSH6','MSH3','PMS1','PMS2','POLE','POLD1') # https://www.nature.com/articles/ncomms15180/, Fig 1c
 TCGA.MSI.sample     <- names(TCGA.mutation.burden)[log2(TCGA.mutation.burden) > 9]
 SU2C.MSI.sample     <- names(SU2C.mutation.burden)[log2(SU2C.mutation.burden) > 9]
 CCLE.MSI.sample     <- names(CCLE.mutation.burden)[log2(CCLE.mutation.burden) > 9]
-MSI.sample          <- c(TCGA.MSI.sample,SU2C.MSI.sample,CCLE.MSI.sample)     ####### 超突变的样本
-MSI.no.sample       <- setdiff(colnames(MMR.mutation.matrix),MSI.sample)  ####不是超突变的样本
-MMR.no.mut.sample   <- setdiff(colnames(MMR.mutation.matrix),MMR.mut.sample)   ######修复基因没突变的样本
+MSI.sample          <- c(TCGA.MSI.sample,SU2C.MSI.sample,CCLE.MSI.sample)    
+MSI.no.sample       <- setdiff(colnames(MMR.mutation.matrix),MSI.sample) 
+MMR.no.mut.sample   <- setdiff(colnames(MMR.mutation.matrix),MMR.mut.sample)  
 
 
 
@@ -79,7 +79,7 @@ mutation.profile <- MMR.mutation.matrix
 col.df.pro <- MSI.meta
 col.annotation    <-  HeatmapAnnotation(type=col.df.pro$type, 
                                         col = list(type = c("MSI" =  "red", "MSI.no.sample" = "blue")) ,
-                                        show_annotation_name = F,## 不显示type
+                                        show_annotation_name = F,
                                         show_legend = F
 )
 
@@ -94,7 +94,7 @@ alter_fun <- list(
   }
 )
 
-# 定义颜色
+
 col <- c("MUT" = "black", "background" = "#CCCCCC")
 sample_order <- col.df.pro$id
 mutation.profile <- mutation.profile[,col.df.pro$id]
@@ -103,15 +103,15 @@ identical(colnames(mutation.profile), col.df.pro$id)
 p1 <- oncoPrint(
   mutation.profile,
   get_type = function(x) {ifelse(x == 1, "MUT", "background")},
-  row_names_side = "left",          # 行名放置在左侧
-  show_heatmap_legend = F,      # 隐藏图例
-  alter_fun = alter_fun,            # 突变样式函数
-  col = col,                        # 颜色定义
-  show_column_names = FALSE,        # 不显示列名
-  show_row_names = T, # 不显示行名
-  top_annotation = col.annotation,  # 顶部注释
-  right_annotation = NULL,          # 确保右侧无条形图
-  show_pct = FALSE,                 # 禁用百分比显示
+  row_names_side = "left",          
+  show_heatmap_legend = F,     
+  alter_fun = alter_fun,           
+  col = col,                        
+  show_column_names = FALSE,        
+  show_row_names = T, 
+  top_annotation = col.annotation,  
+  right_annotation = NULL,          
+  show_pct = FALSE,                 
   row_names_gp = gpar(fontsize = 40, fontface = 'bold'),
   column_order = sample_order,
   row_order = gene.order
@@ -146,9 +146,9 @@ col.ha <- HeatmapAnnotation(type = col.df$type,
                             show_annotation_name = F,### rm type 
                             annotation_name_gp = gpar(fontface = "bold"),
                             annotation_legend_param = list(
-                              title_gp = gpar(fontsize = 20, fontface = 'bold'), ## 图例字体
+                              title_gp = gpar(fontsize = 20, fontface = 'bold'), 
                               labels_gp = gpar(fontsize = 20),
-                              legend_height = unit(10, "cm"), ###调整col annotation 图例大小
+                              legend_height = unit(10, "cm"), 
                               legend_width = unit(5, "cm")
                             ))
 p2 <- Heatmap(mutation.frequency,
@@ -161,14 +161,14 @@ p2 <- Heatmap(mutation.frequency,
               show_column_names = F,
               cluster_columns = F,
               cluster_rows = F,
-              column_order = c("MSI.mutation.fequency", "MSI.no.mutation.fequency"), # 强制指定列顺序
+              column_order = c("MSI.mutation.fequency", "MSI.no.mutation.fequency"),
               row_order = gene.order,
               name = 'Mutation \nfrequency',
               heatmap_legend_param = list(
-                title_gp = gpar(fontsize = 20, fontface = "bold"), # 图例标题字体
-                labels_gp = gpar(fontsize = 20),                  # 图例标签字体
-                legend_height = unit(10, "cm"),                    # 图例高度
-                legend_width = unit(5, "cm")                      # 图例宽度
+                title_gp = gpar(fontsize = 20, fontface = "bold"), 
+                labels_gp = gpar(fontsize = 20),                  
+                legend_height = unit(10, "cm"),                   
+                legend_width = unit(5, "cm")                     
               ))
 
 
@@ -191,15 +191,15 @@ load(file = './plot/mutation.burden.RData')
 load('./data/organize.mutation.data.RData')
 TCGA.MSI.patient    <- names(TCGA.mutation.burden)[log2(TCGA.mutation.burden) >= 9]
 TCGA.MSI.sample     <- PC.maf.data.list$TCGA$Tumor_Sample_Barcode[match(x= TCGA.MSI.patient,table = PC.maf.data.list$TCGA$dcast.id)]
-TCGA.MSI.sample     <- intersect(TCGA.MSI.sample, colnames(log2.fpkm.matrix))  ###TCGA 超突变的原发癌样本
-TCGA.non.MSI.sample <- setdiff(colnames(log2.fpkm.matrix),TCGA.MSI.sample )    #### TCGA 不是超突变的原发癌样本
+TCGA.MSI.sample     <- intersect(TCGA.MSI.sample, colnames(log2.fpkm.matrix)) 
+TCGA.non.MSI.sample <- setdiff(colnames(log2.fpkm.matrix),TCGA.MSI.sample )    
 
 source('./code/BioKLab.util.R')
 de.res <- perform.DE.analysis.between.TRE.and.CON(CON.log2.read.count.matrix = log2.read.count.matrix[,TCGA.non.MSI.sample],
                                                   TRE.log2.read.count.matrix = log2.read.count.matrix[,TCGA.MSI.sample],
                                                   CON.log2.tpm.matrix        = log2.tpm.matrix[,TCGA.non.MSI.sample],
                                                   TRE.log2.tpm.matrix        = log2.tpm.matrix[,TCGA.MSI.sample]
-)   ####得到超突变样本和非超突变样本差异表达基因
+)  
 
 up.gene <- rownames(de.res)[de.res$log2FoldChange > 1  & de.res$padj < 0.05] # DAVIDE analysis shows cell cycle - related process elevated, and T cell abundance elevated 
 dn.gene <- rownames(de.res)[de.res$log2FoldChange < -1 & de.res$padj < 0.05] # Gamma-delta T cell marker TRGV9 down-regulated, interesting! 
@@ -234,10 +234,10 @@ ggplot(de.res, aes(x = log2FoldChange, y = -log10(padj),color=sig))+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 30),
-    axis.title = element_text(size = 30, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 30, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 30, hjust = 0.5, color = 'black'),    
+    axis.text = element_text(size = 30, color = 'black'),    
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.4, "cm"),         
     
   )
 ggsave('./pcdata/paper/plot/section2/de.hyper.non.volcano.pdf', width = 10, height = 10)
