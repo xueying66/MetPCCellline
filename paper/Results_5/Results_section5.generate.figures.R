@@ -30,11 +30,11 @@ ggplot(cMET_vs_wild_two_res, aes(x = log2FoldChange, y = -log10(padj),color=sig)
   theme(
     legend.position = "none",
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-    axis.title = element_text(size = 14, face = "bold"),     # 坐标轴标题加粗
-    axis.text = element_text(size = 14, face = "bold"),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.2, "cm"),         # 增加刻度线长度
-    axis.ticks = element_line(size = 1.2)        # 增加刻度线粗细
+    axis.title = element_text(size = 14, face = "bold"),     
+    axis.text = element_text(size = 14, face = "bold"),     
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.2, "cm"),        
+    axis.ticks = element_line(size = 1.2)        
   )
 
 ggsave('/home/liuxueying/Proj_MetPCCelline/output/plot/cMET.volcano.pdf', width = 8, height = 8)
@@ -59,10 +59,10 @@ tmp %>% ggplot(aes(x= type, y = value, color = type))+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),    
+    axis.text = element_text(size = 25, color = 'black'),     
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA),
+    axis.ticks.length = unit(0.4, "cm"),         
     
   )
 
@@ -444,10 +444,10 @@ ggplot(df, aes(x = sample, y = expression)) +
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 20),
-    axis.title = element_text(size = 20, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 20, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.25, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 20, hjust = 0.5, color = 'black'),    
+    axis.text = element_text(size = 20, color = 'black'),     
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.25, "cm"),         
     
   )
 ggsave('/home/liuxueying/Proj_MetPCCelline/output/plot/KRT5_expr.pdf', width = 8, height = 6)
