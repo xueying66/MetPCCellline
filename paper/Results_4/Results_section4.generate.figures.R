@@ -35,7 +35,7 @@ p1 <- ggplot(pca,aes(x= PC1, y = PC2, color = cell.line))+
 pdf(file = './pcdata/paper/plot/section4/pca.pdf',width = 8, height = 6)
 p1
 dev.off()
-#Fig4b pc1 tail 200 gene 富集分析 --------------------------------------------------
+#Fig4b pc1 tail 200 gene  --------------------------------------------------
 `MSigDB_Hallmark_2020_table.(2)` <- read.delim("~/met_pc_cell_line/pcdata/explore_pc3/input/MSigDB_Hallmark_2020_table (2).txt")
 msigdb.enrich.result <- `MSigDB_Hallmark_2020_table.(2)`
 
@@ -247,12 +247,12 @@ highlight_points <- df_ranked[df_ranked$rank %in% c(1018, 1019,1017), ]
 ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
   geom_point(size = 3) +  
   labs(
-    # 标题使用该列名，或你想替换的名字
+    
     x = "Rank",
     y = "Transcriptome similarity"
   ) +
   scale_color_manual(values = c("prostate" = "red", "others" = "black")) +
-  # 在图中高亮 pc.cell.line.name 这几行
+ 
   geom_point(
     data = subset(df, name %in% pc.cell.line.name),
     color = "red",
@@ -260,7 +260,7 @@ ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
   )+
   geom_text_repel(data = subset(df, name %in% pc.cell.line.name), 
                   aes(label = gsub(x= name, pattern = '_PROSTATE','')), 
-                  nudge_y = 0.02,  # 标签在纵坐标上的偏移量
+                  nudge_y = 0.02,  
                   color = "black",
                   size = 4,
                   arrow = arrow(length = unit(0.02, "npc")))+
@@ -274,10 +274,10 @@ ggplot(df_ranked, aes(x = rank, y = correlation, color = prostate)) +
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 25, color = 'black'),      
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.4, "cm"),        
     
   )+ggtitle('MSPC')
 ggsave('./pcdata/paper/plot/section4/MSPC.pdf', width = 9, height = 8)
@@ -285,7 +285,7 @@ ggsave('./pcdata/paper/plot/section4/MSPC.pdf', width = 9, height = 8)
 
 
 #Fig.4i MSPC pheatmap annotation and boxplot -----------------------------------------------------
-rownames(row_anno_df) <- rownames(mat)  ###矩阵行名和注释信息行名需要对应
+rownames(row_anno_df) <- rownames(mat) 
 
 
 load(file = './pcdata/paper/data/section3/CRPC.confident.seob.RData')
@@ -305,7 +305,7 @@ three.cell.type.aver <- AverageExpression(
 
 three.cell.type.aver.matrix                                                     <- as.matrix(three.cell.type.aver$RNA)
 
-###筛选基因使用三种亚型5000高变基因
+
 three.cell.type.seob <- FindVariableFeatures(three.cell.type.seob, selection.method = "vst", nfeatures = 5000)
 
 norm.5000.marker.gene <- head(VariableFeatures(three.cell.type.seob), 5000)
@@ -355,15 +355,15 @@ theme_niwot <- function(){
 
 p1 <- ggplot(cor.res, aes(x = variable, y = value)) +
   geom_violin(aes(fill = variable, colour = variable), alpha = 0.5) +
-  # alpha控制不透明度
+ 
   geom_boxplot(aes(colour = variable), width = 0.2)+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),    
+    axis.text = element_text(size = 25, color = 'black'),     
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA),
+    axis.ticks.length = unit(0.4, "cm"),       
     
   )+
   scale_color_manual(values = c("BE" = '#D65813', "LE" = '#2CAD3F', 'NE'='#6792CD'))+
@@ -408,10 +408,10 @@ ggplot(pca,aes(x= PC1, y = PC2, color = cell.line))+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 25, color = 'black'),      
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.4, "cm"),        
     
   )+
   theme(legend.position = 'none')
@@ -564,11 +564,10 @@ cor.stem.res %>% reshape2::melt() %>%
   scale_fill_manual(values = my.cols)+
   scale_color_manual(values = my.cols)+
   geom_jitter(
-    aes(color = Var2),                # 取消 Var2 默认颜色映射
+    aes(color = Var2),                
     position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.6),
     size = 1.2,
-    # 点的颜色
-    # 点透明度
+    
   )+
   
   
@@ -577,10 +576,10 @@ cor.stem.res %>% reshape2::melt() %>%
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 25, color = 'black'),      
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.4, "cm"),       
     
   )+RotatedAxis()
 
@@ -606,11 +605,10 @@ cor.AR.res %>% reshape2::melt() %>%
   scale_fill_manual(values = my.cols)+
   scale_colour_manual(values = my.cols)+
   geom_jitter(
-    aes(color = Var2),                # 取消 Var2 默认颜色映射
+    aes(color = Var2),               
     position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.6),
     size = 1.2,
-    # 点的颜色
-    # 点透明度
+   
   )+
   stat_compare_means(comparisons = list(
     c('VCaP','LNCaP')), method = 'wilcox.test', paired = T)+
@@ -649,11 +647,10 @@ cor.NE.res %>% reshape2::melt() %>%
   scale_fill_manual(values = my.cols)+
   scale_colour_manual(values = my.cols)+
   geom_jitter(
-    aes(color = Var2),                # 取消 Var2 默认颜色映射
+    aes(color = Var2),               
     position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.6),
     size = 1.2,
-    # 点的颜色
-    # 点透明度
+  
   )+
   stat_compare_means(comparisons = list(c('NCI-H660','DU145'),c('NCI-H660','PC3')), method = 'wilcox.test',paired = T)+
   scale_x_discrete(labels = c('NCI-H660' = 'NCI-H660',
@@ -701,11 +698,10 @@ cor.stem.res %>% reshape2::melt() %>%
   scale_fill_manual(values = my.cols)+
   scale_colour_manual(values = my.cols)+
   geom_jitter(
-    aes(color = Var2),                # 取消 Var2 默认颜色映射
+    aes(color = Var2),               
     position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.6),
     size = 1.2,
-    # 点的颜色
-    # 点透明度
+   
   )+
   stat_compare_means(comparisons = list(c('NCI-H660','DU145'),c('NCI-H660','PC3')), method = 'wilcox.test',paired = T)+
   # scale_x_discrete(labels = c('NCI-H660' = 'NCI-H660',
@@ -721,10 +717,10 @@ cor.stem.res %>% reshape2::melt() %>%
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 25),
-    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 25, color = 'black'),      # 坐标轴刻度加粗
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.4, "cm"),         # 增加刻度线长度
+    axis.title = element_text(size = 25, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 25, color = 'black'),    
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA),
+    axis.ticks.length = unit(0.4, "cm"),        
     
   )+
   theme(legend.position = "none")+
@@ -745,11 +741,10 @@ cor.AR.res %>% reshape2::melt() %>%
   scale_fill_manual(values = my.cols)+
   scale_colour_manual(values = my.cols)+
   geom_jitter(
-    aes(color = Var2),                # 取消 Var2 默认颜色映射
+    aes(color = Var2),                
     position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.6),
     size = 1.2,
-    # 点的颜色
-    # 点透明度
+    
   )+
   stat_compare_means(comparisons = list(c('NCI-H660','DU145'),c('NCI-H660','PC3')), method = 'wilcox.test',paired = T)+
   scale_x_discrete(labels = c('NCI-H660' = 'NCI-H660',
