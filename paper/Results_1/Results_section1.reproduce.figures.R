@@ -124,11 +124,11 @@ ggplot(number.genes, aes(x = name, y = mutation_burden)) +
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 15),
-    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 15, color = 'black'),      # 坐标轴刻度加粗
+    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 15, color = 'black'),     
     axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.2, "cm"),         # 增加刻度线长度
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.2, "cm"),       
     
   )
 ggsave('/home/liuxueying/Proj_MetPCCelline/plot/Number.of.mutated.genes.pdf', width = 5, height = 5)
@@ -145,11 +145,11 @@ ggplot(mutation.burden,aes(x= name, y = mutation.burden))+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 15),
-    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 15, color = 'black'),      # 坐标轴刻度加粗
+    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     
+    axis.text = element_text(size = 15, color = 'black'),      
     
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.2, "cm"),         # 增加刻度线长度
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA),
+    axis.ticks.length = unit(0.2, "cm"),        
     
   )
 
@@ -166,11 +166,11 @@ ggplot(ratio,aes(x= name, y = aa)) +
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 15),
-    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 15, color = 'black'),      # 坐标轴刻度加粗
+    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),    
+    axis.text = element_text(size = 15, color = 'black'),      
     axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.2, "cm"),         # 增加刻度线长度
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.2, "cm"),        
     
   )
 
@@ -217,18 +217,18 @@ load(file = '/home/liuxueying/Proj_MetPCCelline/output/data/hot.mutation.code.cc
 p1 <- oncoPrint(
   hot.mutation.code.ccle,
   get_type = function(x) {ifelse(x == 1, "MUT", "background")},
-  row_names_side = "left",          # 行名放置在左侧
-  show_heatmap_legend = F,      # 隐藏图例
-  alter_fun = alter_fun,            # 突变样式函数
-  col = col,                        # 颜色定义
-  show_column_names = T,        # 显示列名
-  top_annotation = NULL,        # 确保顶部无条形图
-  right_annotation = NULL,          # 确保右侧无条形图
-  show_pct = FALSE,                 # 禁用百分比显示
-  row_names_gp = gpar(fontsize = 20),    #行名字体
-  column_names_gp = gpar(fontsize = 25), # 列名字体
-  column_order = sample.order, #行名顺序
-  column_names_rot = 45)        # 列名旋转45
+  row_names_side = "left",         
+  show_heatmap_legend = F,      
+  alter_fun = alter_fun,           
+  col = col,                       
+  show_column_names = T,        
+  top_annotation = NULL,       
+  right_annotation = NULL,         
+  show_pct = FALSE,                 
+  row_names_gp = gpar(fontsize = 20),   
+  column_names_gp = gpar(fontsize = 25), 
+  column_order = sample.order, 
+  column_names_rot = 45)       
 pdf('/home/liuxueying/Proj_MetPCCelline/output/plot/Figure.1f.pdf', width = 12, height = 9)
 p1
 dev.off()
@@ -263,11 +263,11 @@ ggplot(dm.cnv, aes(x = delta, y = -log10(p.adj),color=sig))+
   theme(
     legend.position = 'none',
     plot.title = element_text(hjust = 0.5, size = 15),
-    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),     # 坐标轴标题加粗
-    axis.text = element_text(size = 15, color = 'black'),      # 坐标轴刻度加粗
+    axis.title = element_text(size = 15, hjust = 0.5, color = 'black'),    
+    axis.text = element_text(size = 15, color = 'black'),     
     axis.text.x = element_text( hjust = 1, vjust = 1),
-    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), # 加粗边框
-    axis.ticks.length = unit(0.2, "cm"),         # 增加刻度线长度
+    panel.border = element_rect(color = "black", linewidth = 1.5, fill = NA), 
+    axis.ticks.length = unit(0.2, "cm"),         
     
   )
 
