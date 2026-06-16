@@ -1,7 +1,7 @@
 setwd('/home/liuxueying/met_pc_cell_line/')
 # Fig.1a ---------------------------------------------------------------------
-load(file = './data/CCLE.SU2C.TCGA.mutation.matrix.RData')
-load(file = './data/compare.somatic.mutation.RData')
+load(file = './pcdata/paper/data/section1/CCLE.SU2C.TCGA.mutation.matrix.RData')
+load(file = './pcdata/paper/data/section1/compare.somatic.mutation.RData')
 full.gene               <- c(MET.highly.mutated.gene,MET.dm.gene) %>% unique  
 
 CCLE.mutation.fequency  <- apply(CCLE.mutation.matrix[full.gene,], 1, sum) / ncol(CCLE.mutation.matrix)
@@ -305,7 +305,7 @@ ggsave('./plot/section1/CCLE.mutation.burden.pdf', width = 5.5, height = 5)
 # Fig.1d ------------------------------------------------------------------
 
 
-load(file= './data/CCLE.mutation.burden.RData')
+load(file= './pcdata/paper/data/section1/CCLE.mutation.burden.RData')
 resemble.gene.cnt                              <- apply(CCLE.mutation.matrix[full.gene,],2,sum)
 ( resemble.gene.cnt[names(CCLE.mutation.burden)] / CCLE.mutation.burden ) %>% sort
 resemble.gene.cnt                       <- apply(CCLE.mutation.matrix[full.gene,],2,sum)
@@ -446,8 +446,8 @@ dev.off()
 
 #Fig. 1g all samples dm cnv ------------------------------------------------------
 
-load(file = './data/TCGA.gene.cnv.matrix.RData')
-load(file = './data/SU2C.gene.cnv.matrix.RData')
+load(file = './pcdata/paper/data/section1/TCGA.gene.cnv.matrix.RData')
+load(file = './pcdata/paper/data/section1/SU2C.gene.cnv.matrix.RData')
 
 
 c.gene <- intersect(rownames(TCGA.gene.cnv.matrix), rownames(SU2C.gene.cnv.matrix))
@@ -506,7 +506,7 @@ ggsave('./pcdata/paper/plot/section1/all.dm.CNV.pdf', width = 5, height = 5)
 
 
 #Fig.1h AR CNV  -----------------------------------------------------------------
-load(file = './data/CCLE.PC.gene.cnv.matrix.RData')
+load(file = './pcdata/paper/data/section1/CCLE.PC.gene.cnv.matrix.RData')
 
 
 df <- CCLE.PC.gene.cnv.matrix['AR', ] %>% sort() %>% as.data.frame()
